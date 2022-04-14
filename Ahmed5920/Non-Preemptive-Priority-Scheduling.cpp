@@ -13,7 +13,7 @@ struct process {
     int completion_time;
     int turnaround_time;
     int waiting_time;
-    int response_time;
+
 };
 
 int main() {
@@ -22,13 +22,10 @@ int main() {
     struct process p[100];
     float avg_turnaround_time;
     float avg_waiting_time;
-    float avg_response_time;
-    float cpu_utilisation;
     int total_turnaround_time = 0;
     int total_waiting_time = 0;
     int total_response_time = 0;
     int total_idle_time = 0;
-    float throughput;
     int is_completed[100];
     memset(is_completed, 0, sizeof(is_completed));
 
@@ -75,11 +72,10 @@ int main() {
             p[idx].completion_time = p[idx].start_time + p[idx].burst_time;
             p[idx].turnaround_time = p[idx].completion_time - p[idx].arrival_time;
             p[idx].waiting_time = p[idx].turnaround_time - p[idx].burst_time;
-            p[idx].response_time = p[idx].start_time - p[idx].arrival_time;
+
 
             total_turnaround_time += p[idx].turnaround_time;
             total_waiting_time += p[idx].waiting_time;
-            total_response_time += p[idx].response_time;
             total_idle_time += p[idx].start_time - prev;
 
             is_completed[idx] = 1;
@@ -102,22 +98,25 @@ int main() {
 
     avg_turnaround_time = (float)total_turnaround_time / n;
     avg_waiting_time = (float)total_waiting_time / n;
-    avg_response_time = (float)total_response_time / n;
-    cpu_utilisation = ((max_completion_time - total_idle_time) / (float)max_completion_time) * 100;
-    throughput = float(n) / (max_completion_time - min_arrival_time);
 
     cout << endl << endl;
 
-    cout << "#P\t" << "AT\t" << "BT\t" << "PRI\t" << "ST\t" << "CT\t" << "TAT\t" << "WT\t" << "RT\t" << "\n" << endl;
+    /*
+    AT - Arrival Time of the process
+    BT - Burst time of the process
+    ST - Start time of the process
+    CT - Completion time of the process
+    TAT - Turnaround time of the process
+    WT - Waiting time of the process
+    RT - Response time of the process
+    */
+
+    cout << "#P\t" << "AT\t" << "BT\t" << "PRI\t" << "ST\t" << "CT\t" << "TAT\t" << "WT\t" << "\n" << endl;
 
     for (int i = 0; i < n; i++) {
-        cout << p[i].pid << "\t" << p[i].arrival_time << "\t" << p[i].burst_time << "\t" << p[i].priority << "\t" << p[i].start_time << "\t" << p[i].completion_time << "\t" << p[i].turnaround_time << "\t" << p[i].waiting_time << "\t" << p[i].response_time << "\t" << "\n" << endl;
+        cout << p[i].pid << "\t" << p[i].arrival_time << "\t" << p[i].burst_time << "\t" << p[i].priority << "\t" << p[i].start_time << "\t" << p[i].completion_time << "\t" << p[i].turnaround_time << "\t" << p[i].waiting_time << "\t" << "\n" << endl;
     }
     cout << "Average Turnaround Time = " << avg_turnaround_time << endl;
     cout << "Average Waiting Time = " << avg_waiting_time << endl;
-    cout << "Average Response Time = " << avg_response_time << endl;
-    cout << "CPU Utilization = " << cpu_utilisation << "%" << endl;
-    cout << "Throughput = " << throughput << " process/unit time" << endl;
-
 
 }
